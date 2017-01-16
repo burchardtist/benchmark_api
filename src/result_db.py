@@ -22,10 +22,7 @@ class ResultDB:
             'status',
             self.escape_values(STATUSES['IN_PROGRESS'])
         )
-        result = self.conn.execute(query)
-        import ipdb
-        ipdb.set_trace()
-        return result.lastrowid, STATUSES['IN_PROGRESS']
+        return self.conn.execute(query).lastrowid, STATUSES['IN_PROGRESS']
 
     def update_status(self, benchmark_id, status):
         query = self.update_status_query.format(
