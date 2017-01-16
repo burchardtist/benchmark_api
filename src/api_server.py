@@ -19,7 +19,7 @@ def listing_handler():
             'error': 'too few arguments'
         }
 
-    benchmark_id, status = result_db.create_benchmark()
+    benchmark_id, status = result_db.create_benchmark(params['systemId'], params['database'])
     proc_string = 'start_benchmark host={} port={} user={} password={} db_name={} db_id={} benchmark_id={}'.format(
         params['address'], params['port'], params['user'],
         params['password'], params['database'], params['systemId'], benchmark_id

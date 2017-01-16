@@ -16,11 +16,11 @@ class ResultDB:
         )
         self.conn = create_engine(self.url)
 
-    def create_benchmark(self):
+    def create_benchmark(self, system, name):
         query = self.insert_query.format(
             MYSQL_TABLE,
-            'status',
-            self.escape_values(STATUSES['IN_PROGRESS'])
+            'status, db_system, db_name',
+            ''.join('{},'.format(self.escape_values(x)) for x in [STATUSES['IN_PROGRESS'], system, name]).rstrip(',')
         )
         return self.conn.execute(query).lastrowid, STATUSES['IN_PROGRESS']
 
