@@ -12,17 +12,17 @@ result_db = ResultDB()
 
 @app.post('/RegisterBenchmark')
 def listing_handler():
-    """
     try:
-        params = {key: request.POST[key] for key in ['systemId', 'address', 'port', 'user', 'password']}
+        params = {key: request.POST[key] for key in ['systemId', 'address', 'port', 'user', 'password', 'database']}
     except KeyError:
         return {
             'error': 'too few arguments'
         }
-    """
+
     benchmark_id, status = result_db.create_benchmark()
-    proc_string = 'start_benchmark host={} user={} password={} db_name={} db_id={} benchmark_id={}'.format(
-        'localhost', 'root', 'admin123', 'comparison', '1', benchmark_id
+    proc_string = 'start_benchmark host={} port={} user={} password={} db_name={} db_id={} benchmark_id={}'.format(
+        params['address'], params['port'], params['user'],
+        params['password'], params['database'], params['systemId'], benchmark_id
     )
 
     subprocess.Popen(proc_string.split())

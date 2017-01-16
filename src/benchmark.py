@@ -22,7 +22,7 @@ class DatabaseGenerator:
     data = None
     length = None
 
-    def __init__(self, host, user, password, db_name, db_id, length):
+    def __init__(self, host, port, user, password, db_name, db_id, length):
         self.length = length
         self.dbsystem = next(name.upper() for name, id_ in DB_IDS.items() if str(id_) == db_id)
 
@@ -31,6 +31,7 @@ class DatabaseGenerator:
         self.config = dict(
             HOST=host,
             USER=user,
+            PORT=port,
             PASSWORD=password,
             DB_NAME=db_name,
             CONN=CONNECTORS[self.dbsystem]
@@ -39,11 +40,12 @@ class DatabaseGenerator:
         self.conn = self.get_engine()
 
     def get_engine(self, with_db=True):
-        url = '{db}://{user}:{passwd}@{host}{dbname}'.format(
+        url = '{db}://{user}:{passwd}@{host}:{port}{dbname}'.format(
             db=self.config['CONN'],
             user=self.config['USER'],
             passwd=self.config['PASSWORD'],
             host=self.config['HOST'],
+            port=self.config['PORT'],
             dbname='/{}'.format(self.config['DB_NAME']) if with_db else ''
         )
         return create_engine(url, isolation_level='AUTOCOMMIT' if not with_db else 'READ_COMMITTED')
@@ -151,8 +153,8 @@ class DatabaseGenerator:
 
 
 class Benchmark:
-    def __init__(self, host, user, password, db_name, db_id):
-        self.database_generator = DatabaseGenerator(host, user, password, db_name, db_id, TABLE_SIZE)
+    def __init__(self, host, port, user, password, db_name, db_id):
+        self.database_generator = DatabaseGenerator(host, port, user, password, db_name, db_id, TABLE_SIZE)
 
     def start_benchmark(self):
         self.database_generator.generate_data()
