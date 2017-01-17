@@ -20,6 +20,31 @@ def index_view():
     return bottle.static_file('index.html', root='static/')
 
 
+@app.get('/api/GetTest')
+def get_test():
+    try:
+        benchmark_id = request.GET['benchmarkId']
+    except KeyError:
+        return {
+            'error': 'benchmarkId needed'
+        }
+    return {
+        'benchmark_id': benchmark_id,
+        'status': result_db.get_status(benchmark_id)
+    }
+
+
+@app.get('/api/BenchmarkResult')
+def benchmark_result():
+    try:
+        benchmark_id = request.GET['benchmarkId']
+    except KeyError:
+        return {
+            'error': 'benchmarkId needed'
+        }
+    return result_db.get_results(benchmark_id)
+
+
 @app.post('/api/RegisterBenchmark')
 def register_benchmark():
     try:

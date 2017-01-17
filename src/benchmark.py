@@ -160,7 +160,6 @@ class Benchmark:
             insert=0,
             select=0,
             update=0,
-            insert_index=0,
             select_index=0,
             update_index=0
         )
@@ -188,6 +187,4 @@ class Benchmark:
             self.benchmark_times['update_index'] +=\
                 self.timed.time(self.database_generator.update_data(
                     'city=\'stadt\', lat=5.40624, lon=1.3252', 'city like \'%1pos%\'', indexed=True), 'update')
-            self.benchmark_times['insert_index'] +=\
-                self.timed.time(self.database_generator.insert_data(indexed=True), 'insert_index')
             self.database_generator.close()

@@ -6,7 +6,6 @@ CREATE TABLE benchmark(
     db_name varchar(50),
     score decimal(7, 3),
     insert_time decimal(7, 3),
-    insert_index_time decimal(7, 3),
     select_time decimal(7, 3),
     select_index_time decimal(7, 3),
     update_time decimal(7, 3),

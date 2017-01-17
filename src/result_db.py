@@ -1,8 +1,10 @@
 import os
 
+import numpy as np
+from decimal import Decimal
 from sqlalchemy import create_engine
 
-from src.settings import STATUSES, MYSQL_TABLE
+from src.settings import STATUSES, MYSQL_TABLE, DB_IDS
 if os.environ.get('localhost_app'):
     from src.settings import MYSQL_USER, MYSQL_PASSWD, MYSQL_HOST, MYSQL_DB
 
@@ -11,6 +13,9 @@ class ResultDB:
     insert_query = 'INSERT INTO {0}({1}) VALUES({2}) RETURNING id;'
     update_status_query = 'UPDATE {0} SET status={1} WHERE id={2};'
     update_results_query = 'UPDATE {0} SET score={1}, {2} WHERE id={3};'
+    get_status_query = 'SELECT status from {0} WHERE id={1};'
+    get_benchmark_query = 'SELECT * from {0} WHERE id={1};'
+    get_all_query = 'SELECT * from {0} where db_system={1} and status=\'done\';'
 
     def __init__(self):
         self.url = 'postgresql+psycopg2://{user}:{passwd}@{host}/{dbname}'.format(
@@ -46,5 +51,53 @@ class ResultDB:
         )
         self.conn.execute(query)
 
+    def get_status(self, benchmark_id):
+        query = self.get_status_query.format(
+            MYSQL_TABLE,
+            benchmark_id
+        )
+        return self.conn.execute(query).fetchone()[0]
+
+    def get_results(self, benchmark_id):
+        query = self.get_benchmark_query.format(
+            MYSQL_TABLE,
+            benchmark_id
+        )
+        benchmark = dict(zip(self.conn.execute(query).keys(), self.conn.execute(query).fetchone()))
+        query_all = self.get_all_query.format(
+            MYSQL_TABLE,
+            self.escape_values(benchmark['db_system'])
+        )
+        all_result = self.conn.execute(query_all)
+        all_benchmarks = sorted([dict(zip(all_result.keys(), x)) for x in self.conn.execute(query_all)],
+                                key=lambda x: x['score'])
+        all_benchmarks = [self.replace_decimals(x) for x in all_benchmarks]
+
+        scores = [float(x['score']) for x in all_benchmarks]
+
+        quantiles = [
+            all_benchmarks[int(np.percentile(scores, x))]
+            for name, x in [('first', 25), ('second', 50), ('third', 75)]
+        ]
+
+
+
+        return dict(
+            systemName=next(name.upper() for name, id_ in DB_IDS.items() if str(id_) == benchmark['db_system']),
+            totalBenchmarksCount=len(all_benchmarks),
+            bestTotalTime=all_benchmarks[0],
+            worstTotalTime=all_benchmarks[-1],
+            rankingPosition=next(i for i, x in enumerate(all_benchmarks) if str(x['id']) == benchmark_id),
+            systemOtherResults=quantiles
+        )
+
     def escape_values(self, s):
         return '\'{}\''.format(s)
+
+    def replace_decimals(self, item):
+        result = {}
+        for key, value in item.items():
+            result[key] = float(value) if isinstance(value, Decimal) else str(value)
+        return result
+
+
