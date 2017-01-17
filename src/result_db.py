@@ -2,7 +2,9 @@ import os
 
 from sqlalchemy import create_engine
 
-from src.settings import MYSQL_USER, MYSQL_PASSWD, MYSQL_HOST, MYSQL_DB, MYSQL_TABLE, STATUSES
+from src.settings import STATUSES
+if os.environ.get('localhost_app'):
+    from src.settings import MYSQL_PASSWD, MYSQL_HOST, MYSQL_DB, MYSQL_TABLE
 
 
 class ResultDB:
