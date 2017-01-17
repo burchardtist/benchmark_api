@@ -4,6 +4,7 @@ from datetime import timedelta, datetime
 
 from sqlalchemy import create_engine
 from sqlalchemy import text
+from src.result_db import ResultDB
 
 from src.settings import TABLE_COLUMNS, TABLE_NAME, QUERIES, CONNECTORS, BENCHMARK_ITERATIONS, TABLE_SIZE, DB_IDS
 from src.setup_logger import setup_logger
@@ -73,14 +74,12 @@ class DatabaseGenerator:
         ]
         logger.info('LENGTH: {}'.format(self.length))
 
-    @Timed('insert')
     def insert_data(self, **kwargs):
         for i, name in self._insert_data(self.data):
             print('[INSERT][{2}]: {0} / {1}'.format(i + 1, self.length, name), end='\r')
         print('')
         yield self.dbsystem, self.length
 
-    @Timed('select')
     def select_data(self, where, **kwargs):
         self.conn.execute(text(self.QUERIES['select'].format(
             TABLE_NAME,
@@ -88,7 +87,6 @@ class DatabaseGenerator:
         )))
         yield self.dbsystem, self.length
 
-    @Timed('update')
     def update_data(self, set_, where, **kwargs):
         for i, name in self._update_data(set_, where):
             print('[UPDATE][{2}]: {0} / {1}'.format(i + 1, self.length, name), end='\r')
@@ -153,23 +151,43 @@ class DatabaseGenerator:
 
 
 class Benchmark:
-    def __init__(self, host, port, user, password, db_name, db_id):
+    def __init__(self, host, port, user, password, db_name, db_id, benchmark_id):
+        self.benchmark_id = benchmark_id
+        self.result_db = ResultDB()
+        self.timed = Timed()
         self.database_generator = DatabaseGenerator(host, port, user, password, db_name, db_id, TABLE_SIZE)
+        self.benchmark_times = dict(
+            insert=0,
+            select=0,
+            update=0,
+            insert_index=0,
+            select_index=0,
+            update_index=0
+        )
 
     def start_benchmark(self):
         self.database_generator.generate_data()
+        self._run()
+        self.result_db.update_results(self.benchmark_id, self.benchmark_times)
 
+    def _run(self):
         for _ in range(BENCHMARK_ITERATIONS):
             self.database_generator.recreate_db()
-            self.database_generator.insert_data()
-            self.database_generator.select_data('city like \'%ab%\' and lat > 30')
-            self.database_generator.update_data('city=\'1posen\', lat=52.4064, lon=16.9252', 'city like \'%ab%\'')
+            self.benchmark_times['insert'] += self.timed.time(self.database_generator.insert_data(), 'insert')
+            self.benchmark_times['select'] += \
+                self.timed.time(self.database_generator.select_data('city like \'%ab%\' and lat > 30'), 'select')
+            self.benchmark_times['update'] += self.timed.time(self.database_generator.update_data(
+                'city=\'1posen\', lat=52.4064, lon=16.9252', 'city like \'%ab%\''), 'update')
             self.database_generator.close()
 
             self.database_generator.recreate_db()
             self.database_generator.add_index()
-            self.database_generator.select_data('city like \'%1pos%\' and lat > 30', indexed=True)
-            self.database_generator.update_data(
-                'city=\'stadt\', lat=5.40624, lon=1.3252', 'city like \'%1pos%\'', indexed=True)
-            self.database_generator.insert_data(indexed=True)
+            self.benchmark_times['select_index'] +=\
+                self.timed.time(
+                    self.database_generator.select_data('city like \'%1pos%\' and lat > 30', indexed=True), 'update')
+            self.benchmark_times['update_index'] +=\
+                self.timed.time(self.database_generator.update_data(
+                    'city=\'stadt\', lat=5.40624, lon=1.3252', 'city like \'%1pos%\'', indexed=True), 'update')
+            self.benchmark_times['insert_index'] +=\
+                self.timed.time(self.database_generator.insert_data(indexed=True), 'insert_index')
             self.database_generator.close()

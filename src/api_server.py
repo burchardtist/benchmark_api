@@ -7,13 +7,21 @@ from bottle import request, response
 from src.result_db import ResultDB
 
 app = bottle.Bottle()
-response.default_content_type = "application/json"
-
 result_db = ResultDB()
 
 
-@app.post('/RegisterBenchmark')
-def listing_handler():
+@app.route('/static/<filename:path>')
+def send_static(filename):
+    return bottle.static_file(filename, root='static/')
+
+
+@app.get('/')
+def index_view():
+    return bottle.static_file('index.html', root='static/')
+
+
+@app.post('/api/RegisterBenchmark')
+def register_benchmark():
     try:
         params = {key: request.POST[key] for key in ['systemId', 'address', 'port', 'user', 'password', 'database']}
     except KeyError:

@@ -4,25 +4,22 @@ from src.setup_logger import setup_logger
 
 
 class Timed:
-    def __init__(self, operation):
-        self.operation = operation
+    def __init__(self):
         self.logger = setup_logger('performance')
+        self.operation = None
 
-    def __call__(self, gen):
-        def wrapper(*args, **kwargs):
-            g = gen(*args, **kwargs)
-            try:
-                if 'indexed' in kwargs and kwargs['indexed']:
-                    self.operation = '{}_{}'.format(self.operation, 'indexed')
-                else:
-                    self.operation = self.operation.replace('_indexed', '')
+    def time(self, gen, operation, **kwargs):
+        self.operation = operation
+        try:
+            if 'indexed' in kwargs and kwargs['indexed']:
+                self.operation = '{}_{}'.format(self.operation, 'indexed')
+            else:
+                self.operation = self.operation.replace('_indexed', '')
 
-                while True:
-                    start = time()
-                    dbsystem, length = next(g)
-                    elapsed = time() - start
-                    self.logger.info("[%s][%s][%s] time: %.3fs" % (length, self.operation, dbsystem, elapsed))
-            except StopIteration:
-                return
-
-        return wrapper
+            start = time()
+            while True:
+                dbsystem, length = next(gen)
+        except StopIteration:
+            elapsed = time() - start
+            self.logger.info("[%s][%s][%s] time: %.3fs" % (length, self.operation, dbsystem, elapsed))
+            return elapsed
