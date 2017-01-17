@@ -1,8 +1,12 @@
-# Mysql credentials
-MYSQL_HOST = '127.0.0.1'
-MYSQL_USER = 'root'
-MYSQL_PASSWD = 'admin123'
-MYSQL_DB = 'benchmark_api'
+import os
+
+
+if os.environ.get('localhost'):
+    MYSQL_HOST = '127.0.0.1'
+    MYSQL_USER = 'root'
+    MYSQL_PASSWD = 'admin123'
+    MYSQL_DB = 'benchmark_api'
+
 MYSQL_TABLE = 'benchmark'
 
 STATUSES = dict(
