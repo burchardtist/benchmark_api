@@ -35,7 +35,7 @@ def listing_handler():
 
 
 def run_server():
-    bottle.run(app, host='localhost', port=int(os.environ.get('PORT', 5000)))
+    bottle.run(app, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
 
 
 if __name__ == '__main__':
