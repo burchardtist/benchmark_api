@@ -1,7 +1,7 @@
 import os
 
 
-if os.environ.get('localhost'):
+if os.environ.get('localhost_app'):
     MYSQL_HOST = '127.0.0.1'
     MYSQL_USER = 'root'
     MYSQL_PASSWD = 'admin123'

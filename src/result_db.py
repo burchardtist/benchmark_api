@@ -15,7 +15,7 @@ class ResultDB:
             passwd=MYSQL_PASSWD,
             host=MYSQL_HOST,
             dbname=MYSQL_DB
-        ) if os.environ.get('localhost') else os.environ.get('DATABASE_URL')
+        ) if os.environ.get('localhost_app') else os.environ.get('DATABASE_URL')
         self.conn = create_engine(self.url)
 
     def create_benchmark(self, system, name):
