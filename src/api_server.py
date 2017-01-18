@@ -26,12 +26,23 @@ def get_test():
         benchmark_id = request.GET['benchmarkId']
     except KeyError:
         return {
-            'error': 'benchmarkId needed'
+            'error': 'benchmarkId is needed'
         }
     return {
         'benchmark_id': benchmark_id,
         'status': result_db.get_status(benchmark_id)
     }
+
+
+@app.get('/api/GetList')
+def get_list():
+    try:
+        system_id = request.GET['systemId']
+    except KeyError:
+        return {
+            'error': 'systemId is needed'
+        }
+    return {'result': result_db.get_list(system_id)}
 
 
 @app.get('/api/BenchmarkResult')

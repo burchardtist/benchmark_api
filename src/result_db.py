@@ -85,9 +85,23 @@ class ResultDB:
             bestTotalTime=all_benchmarks[0],
             worstTotalTime=all_benchmarks[-1],
             rankingPosition=next(i for i, x in enumerate(all_benchmarks) if str(x['id']) == benchmark_id),
-            systemOtherResults=quantiles,
-            scoresList=scores
+            systemOtherResults=quantiles
         )
+
+    def get_list(self, system_id):
+        query = self.get_all_query.format(MYSQL_TABLE, self.escape_values(system_id))
+        all_result = self.conn.execute(query)
+        all_benchmarks = sorted([dict(zip(all_result.keys(), x)) for x in all_result],
+                                key=lambda x: x['score'])
+        return [
+            {
+                'id': x['id'],
+                'score': float(x['score']),
+                'db_name': x['db_name'],
+                'benchmark_date': str(x['benchmark_date'])
+            }
+            for x in all_benchmarks
+        ]
 
     def escape_values(self, s):
         return '\'{}\''.format(s)
