@@ -45,26 +45,14 @@ TABLE_COLUMNS = {
 
 QUERIES = {
     'MYSQL': {
-        'create_db': 'CREATE DATABASE {0};',
-        'drop_db': 'DROP DATABASE IF EXISTS {0};',
-        'create_table': 'CREATE TABLE {0}({1});',
+        'create_table': 'DROP TABLE IF EXISTS {0}; CREATE TABLE {0}({1});',
         'insert': 'INSERT INTO {0}({1}) VALUES({2});',
         'select': 'SELECT * FROM {0} where {1};',
         'update': 'UPDATE {0} SET {1} WHERE {2};',
         'create_index': 'ALTER TABLE {0} ADD INDEX({1});',
     },
     'POSTGRESQL': {
-        'create_db': 'CREATE DATABASE {0};',
-        'drop_db': 'DROP DATABASE IF EXISTS {0};',
-        'create_table': 'CREATE TABLE {0}({1});',
-        'insert': 'INSERT INTO {0}({1}) VALUES({2});',
-        'select': 'SELECT * FROM {0} where {1};',
-        'update': 'UPDATE {0} SET {1} WHERE {2};',
-        'create_index': 'CREATE INDEX {2} ON {0}({1});',
-    },
-    'SQLITE': {
-        'create_table': 'CREATE TABLE {0}({1});',
-        'drop_table': 'DROP TABLE IF EXISTS {0};',
+        'create_table': 'DROP TABLE IF EXISTS {0}; CREATE TABLE {0}({1});',
         'insert': 'INSERT INTO {0}({1}) VALUES({2});',
         'select': 'SELECT * FROM {0} where {1};',
         'update': 'UPDATE {0} SET {1} WHERE {2};',

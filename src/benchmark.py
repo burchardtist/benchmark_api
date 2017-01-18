@@ -52,10 +52,6 @@ class DatabaseGenerator:
         return create_engine(url, isolation_level='AUTOCOMMIT' if not with_db else 'READ_COMMITTED')
 
     def recreate_db(self):
-        create_conn = self.get_engine(with_db=False)
-        create_conn.execute(self.QUERIES['drop_db'].format(self.config['DB_NAME']))
-        create_conn.execute(self.QUERIES['create_db'].format(self.config['DB_NAME']))
-
         columns = ''.join(['{} {},'.format(x, z) for x, z in self.TABLE_COLUMNS.items()])[:-1]
         self.conn.execute(self.QUERIES['create_table'].format(TABLE_NAME, columns))
 

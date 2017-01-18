@@ -87,7 +87,7 @@ class ResultDB:
             worstTotalTime=all_benchmarks[-1],
             rankingPosition=next(i for i, x in enumerate(all_benchmarks) if str(x['id']) == benchmark_id),
             systemOtherResults=quantiles,
-            benchmarkResult=self.replace_decimals(benchmark)#{key: str(value) for key, value in benchmark.items()}
+            benchmarkResult=self.replace_decimals(benchmark)
         )
 
     def get_list(self, system_id):
