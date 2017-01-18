@@ -14,7 +14,7 @@ STATUSES = dict(
 TABLE_NAME = 'testtable'
 TABLE_SIZE = pow(10, 1)
 
-BENCHMARK_ITERATIONS = 5
+BENCHMARK_ITERATIONS = 2
 
 DB_IDS = dict(
     MYSQL=1,
