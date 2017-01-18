@@ -73,14 +73,11 @@ class ResultDB:
                                 key=lambda x: x['score'])
         all_benchmarks = [self.replace_decimals(x) for x in all_benchmarks]
 
-        scores = [float(x['score']) for x in all_benchmarks]
-
+        scores = [(float(x['score']), str(x['id'])) for x in all_benchmarks]
         quantiles = [
-            all_benchmarks[int(np.percentile(scores, x))]
-            for name, x in [('first', 25), ('second', 50), ('third', 75)]
+            int(x*len(scores)-1)
+            for name, x in [('first', 0.25), ('second', 0.50), ('third', 0.75)]
         ]
-
-
 
         return dict(
             systemName=next(name.upper() for name, id_ in DB_IDS.items() if str(id_) == benchmark['db_system']),
@@ -88,7 +85,8 @@ class ResultDB:
             bestTotalTime=all_benchmarks[0],
             worstTotalTime=all_benchmarks[-1],
             rankingPosition=next(i for i, x in enumerate(all_benchmarks) if str(x['id']) == benchmark_id),
-            systemOtherResults=quantiles
+            systemOtherResults=quantiles,
+            scoresList=scores
         )
 
     def escape_values(self, s):
