@@ -75,7 +75,7 @@ class ResultDB:
 
         scores = [(float(x['score']), str(x['id'])) for x in all_benchmarks]
         quantiles = [
-            int(x*len(scores)-1)
+            all_benchmarks[int(x*len(scores)-1)]
             for name, x in [('first', 0.25), ('second', 0.50), ('third', 0.75)]
         ]
 
