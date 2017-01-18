@@ -64,6 +64,7 @@ class ResultDB:
             benchmark_id
         )
         benchmark = dict(zip(self.conn.execute(query).keys(), self.conn.execute(query).fetchone()))
+
         query_all = self.get_all_query.format(
             MYSQL_TABLE,
             self.escape_values(benchmark['db_system'])
@@ -75,7 +76,7 @@ class ResultDB:
 
         scores = [(float(x['score']), str(x['id'])) for x in all_benchmarks]
         quantiles = [
-            all_benchmarks[int(x*len(scores)-1)]
+            all_benchmarks[round(x*len(scores)-1)]
             for name, x in [('first', 0.25), ('second', 0.50), ('third', 0.75)]
         ]
 
@@ -85,7 +86,8 @@ class ResultDB:
             bestTotalTime=all_benchmarks[0],
             worstTotalTime=all_benchmarks[-1],
             rankingPosition=next(i for i, x in enumerate(all_benchmarks) if str(x['id']) == benchmark_id),
-            systemOtherResults=quantiles
+            systemOtherResults=quantiles,
+            benchmarkResult=self.replace_decimals(benchmark)#{key: str(value) for key, value in benchmark.items()}
         )
 
     def get_list(self, system_id):
