@@ -1,0 +1,22 @@
+<md-card style="padding: 0px 0px 12px 0px">
+  <md-toolbar color="primary" >
+  {{title}}
+  </md-toolbar>
+  <div *ngIf="data" style="height: 300px; margin: 24px;" >
+   <ngx-charts-bar-horizontal-stacked
+      [scheme]="colorScheme"
+      [results]="data"
+      [gradient]="gradient"
+      [xAxis]="showXAxis"
+      [yAxis]="showYAxis"
+      [legend]="showLegend"
+      [showGridLines]="true"
+      [showXAxisLabel]="showXAxisLabel"
+      [showYAxisLabel]="showYAxisLabel"
+      [xAxisLabel]="xAxisLabel"
+      [yAxisLabel]="yAxisLabel"
+      [customColors]="customColors"
+    >
+      </ngx-charts-bar-horizontal-stacked>
+</div>
+</md-card>

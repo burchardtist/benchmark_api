@@ -1,0 +1,15 @@
+<md-card style="padding: 0px 0px 12px 0px">
+  <md-toolbar  color="primary" >
+    Ranking
+  </md-toolbar>
+   <div style="height: 254px; margin: 50px 24px 24px 24px" >
+
+  <h2 style="text-align: center"> {{ranking}} / {{count}} miejsce w ogólnym rankingu </h2>
+  <ngx-charts-number-card *ngIf="data" 
+      [scheme]="colorScheme"
+      [results]="data"
+      [view]="view"
+     >
+    </ngx-charts-number-card>
+</div>
+</md-card>

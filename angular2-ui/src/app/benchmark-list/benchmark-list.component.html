@@ -1,0 +1,27 @@
+<md-card style="padding: 0px 0px 12px 0px">
+<md-toolbar color="primary">
+  Wyniki
+
+</md-toolbar>
+<div style=" margin: 24px;" >
+<md-select placeholder="System bazy danych" [(ngModel)]="selectedSystem" (ngModelChange)="selectSystem($event)">
+  <md-option *ngFor="let system of databaseSystems" [value]="system.id">
+    {{ system.name }}
+  </md-option>
+</md-select>
+<div  *ngIf="scoreList"  style=" margin-top: 24px;" >
+
+<p-dataTable [value]="scoreList" selectionMode="single" (onRowSelect)="selectResult($event.data)">
+  <p-column field="id" header="Id"  [sortable]="true"></p-column>
+  <p-column field="db_name" header="Nazwa bazy danych"  [sortable]="true"></p-column>
+  <p-column field="benchmark_date" header="Data"  [sortable]="true">
+        <template let-col let-result="rowData" pTemplate="body">
+            <span>{{result[col.field] | date:'dd-MM-yyyy hh:mm'}}</span>
+        </template>
+    
+  </p-column>
+  <p-column field="score" header="Wynik"></p-column>
+</p-dataTable>
+</div>
+</div>
+</md-card>

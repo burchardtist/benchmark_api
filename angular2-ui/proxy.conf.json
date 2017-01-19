@@ -1,0 +1,9 @@
+{
+  "/api/": {
+    "target": "https://infinite-cliffs-54161.herokuapp.com",
+    "secure": true,
+    "logLevel": "debug",
+    "changeOrigin": true
+  }
+  
+}

@@ -1,0 +1,15 @@
+<app-benchmark-form *ngIf="!status" (save)="onSave($event)"></app-benchmark-form>
+
+<md-card *ngIf="status === 'in_progress'">
+  <h2 class="text-center" style="padding-bottom: 30px">Test w trakcie wykonywania</h2>
+
+
+<md-progress-bar mode="indeterminate"></md-progress-bar>
+</md-card>
+
+<md-card *ngIf="status === 'fail'">
+  <h2 class="text-center" style="padding-bottom: 30px">Niepowodzenie</h2>
+     <md-card-actions style="text-align: center" > 
+      <button  md-raised-button   color="primary"  type="button" (click)="status = undefined">Spróbuj ponownie</button>
+    </md-card-actions>
+</md-card>

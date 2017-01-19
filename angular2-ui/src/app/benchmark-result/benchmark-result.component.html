@@ -1,0 +1,14 @@
+<div class="row" *ngIf="loaded">
+  <div class="col-md-12 col-lg-6">
+    <app-ranking-position [count]="count" [ranking]="ranking" [data]="rankingData">
+    </app-ranking-position>
+  </div>
+  <div class="col-md-12 col-lg-6">
+    <app-current-result [data]="currentData"></app-current-result>
+  </div>
+</div>
+<div class="row center-xs center-md center-lg center-sm ">
+  <div class=" col-md-12 col-lg-6">
+    <app-compare-result title="Porównanie" [data]="compareData"></app-compare-result>
+  </div>
+</div>

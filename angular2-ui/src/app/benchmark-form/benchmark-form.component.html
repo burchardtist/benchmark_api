@@ -1,0 +1,51 @@
+<div class="flex-container" fxLayout="row" fxLayoutAlign="center center">
+  <div class="flex-item">
+<md-card>
+  <form (ngSubmit)="onSubmit()" #benchmarkFrom="ngForm">
+    <md-card-content>
+      <h2 style="padding-bottom: 30px">W celu rozpoczęcia testu wybierz system bazy danych oraz wprowadź dane połączeniowe.</h2>
+
+      <p>
+        <md-select placeholder="System bazy danych" [(ngModel)]="data.systemId" name="systemId" required>
+          <md-option *ngFor="let system of databaseSystems" [value]="system.id">
+            {{ system.name }}
+          </md-option>
+        </md-select>
+      </p>
+      <p>
+        <md-input-container>
+          <input md-input type=text placeholder="Adres serwera" required [(ngModel)]="data.address" name="address">
+        </md-input-container>
+      </p>
+      <p>
+        <md-input-container>
+          <input md-input type="number" placeholder="Port" required [(ngModel)]="data.port" name="port">
+        </md-input-container>
+      </p>
+      <p>
+        <md-input-container>
+          <input md-input type="text" placeholder="Użytkownik" required [(ngModel)]="data.user" name="user">
+        </md-input-container>
+      </p>
+      <p>
+        <md-input-container>
+          <input md-input type="password" placeholder="Hasło" required [(ngModel)]="data.password" name="password">
+        </md-input-container>
+      </p>
+          <p>
+        <md-input-container>
+          <input md-input type="database" placeholder="Baza danych" required [(ngModel)]="data.database" name="database">
+        </md-input-container>
+      </p>
+
+    </md-card-content>
+    <md-card-actions style="text-align: center" > 
+      <button  md-raised-button   color="primary"  type="submit" [disabled]="!benchmarkFrom.form.valid">Rozpocznij test</button>
+    </md-card-actions>
+  </form>
+</md-card>
+
+  </div>
+
+</div> 
+
