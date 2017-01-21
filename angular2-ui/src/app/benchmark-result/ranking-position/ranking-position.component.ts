@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-ranking-position',
@@ -15,9 +15,7 @@ export class RankingPositionComponent implements OnInit {
   ranking: number;
   view: any[] = [550, 150];
 
-  colorScheme = 'vivid';
-
-
+  colorScheme = 'nightLights';
 
 
 
@@ -25,6 +23,8 @@ export class RankingPositionComponent implements OnInit {
 
     
   }
+
+
 
   ngOnInit() {
   }

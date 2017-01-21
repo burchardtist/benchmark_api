@@ -18,11 +18,11 @@ export class CompareResultComponent implements OnInit {
   gradient = false;
   showLegend = false;
   showXAxisLabel = true;
-  xAxisLabel = 'Kwartyl';
+  xAxisLabel = 'Czas [ms]';
   showYAxisLabel = true;
   yAxisLabel = 'Wynik';
 
-  colorScheme = 'vivid';
+  colorScheme = 'nightLights';
   view: any[] = [600, 400];
 
   constructor() { }

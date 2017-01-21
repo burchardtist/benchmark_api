@@ -13,12 +13,12 @@ export class CurrentResultComponent implements OnInit {
   data: Result;
 
   view: any[] = [600, 400];
-  colorScheme = "vivid"
+  colorScheme = "nightLights"
 
   // options
   showXAxis = true;
   showYAxis = true;
-  gradient = true;
+  gradient = false;
   showLegend = false;
   showXAxisLabel = true;
   xAxisLabel = 'Typ operacji';

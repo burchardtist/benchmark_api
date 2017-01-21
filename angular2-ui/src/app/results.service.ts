@@ -67,15 +67,20 @@ export class ResultsService {
     let serie: Serie[] = [
       {
         name: "Najlepszy wynik",
-        value: result.bestTotalTime.score
+        value: result.bestTotalTime.score,
+        id: result.bestTotalTime.id
       },
       {
         name: "Twój wynik",
-        value: result.benchmarkResult.score
+        value: result.benchmarkResult.score,
+        id: result.benchmarkResult.id
+        
       },
       {
         name: "Najgorszy wynik",
-        value: result.worstTotalTime.score
+        value: result.worstTotalTime.score,
+        id: result.worstTotalTime.id
+        
       },
     ]
     return serie;
